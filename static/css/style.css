@@ -1,0 +1,84 @@
+/*Common*/
+h1, h2, h3, h4, h5, h6, p, a, label, input {
+    font-family: 'Source Sans Pro', 'sans-serif';
+}
+
+/*Sign In & Up Page*/
+#sign-in-page {
+
+}
+.form-signin, .form-signup {
+    max-width: 350px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 60px;
+}
+
+.form-signin input, .form-signup input {
+    margin: 10px 0 10px 0;
+}
+
+
+/*Add Book Page*/
+#form-add-book input, #form-add-book label {
+    margin: 5px 0 5px 0;
+}
+
+#form-add-book {
+    max-width: 350px;
+    margin: 0 auto;
+    padding-top: 60px;
+}
+
+/*Manage Page*/
+.book-card-holder {
+    text-align: center;
+    margin:0 auto;
+}
+
+.book-card h3 {
+    font-size: 16px;
+}
+
+.book-card p {
+    font-size: 12px;
+}
+.book-card {
+    border: 1px solid;
+    border-radius: 20px;
+    height: 200px;
+    text-align: center;
+    margin: 5px;
+}
+
+.book-card img {
+    height: 90px;
+    width: 60px;
+    margin: 5px auto 5px auto;
+}
+
+/*Individual books page*/
+#individual-book-page img {
+    height: auto;
+    width: 80%;
+    margin: 20px auto;
+}
+
+#individual-book-page {
+    text-align: center;
+}
+
+#individual-book-data {
+    text-align: left;
+    margin: 20px auto;
+}
+
+#individual-book-data p {
+    margin-left: 30px;
+}
+
+@media only screen and (min-width: 768px) {
+   #individual-book-page {
+       margin-top: 60px;
+   }
+}

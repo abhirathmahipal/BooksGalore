@@ -4,6 +4,7 @@ from utils import generate_search_friendly_name, generate_partial_uuid, connect_
 from config import path_to_db
 import re
 import imghdr
+import copy
 
 class Book:
     'Class to make sense of books'
@@ -67,17 +68,16 @@ def is_isbn_invalid(isbn):
     return False
 
 
-def is_cover_invalid(cover_file, uploaded_filename):
+def is_cover_invalid(uploaded_filename):
     file_name, file_extension = os.path.splitext(uploaded_filename)
     
     # extension checking
     if file_extension not in (".png", ".jpg", ".jpeg"):
         return True
-        
-    # Checking if the file actually is an image and not just any renamed file
-    if imghdr.what(cover_file) not in (".png", ".jpg", ".jpeg"):
-        return True
 
+    # Checking if the file actually is an image and not just any renamed file
+    # if the stream if fed into imghdr, the fileobject is destroyed.
+    # create a temporary file and deal with this later
     return False
 
 
@@ -88,3 +88,24 @@ def create_image_path_for_db(uploaded_filename):
        return secure_base_name + generate_partial_uuid(5) + file_extension
     else:
        return secure_base_name[:40] + generate_partial_uuid(5) + file_extension
+
+def does_isbn_exist(isbn):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    cursor.execute("SELECT (SELECT count() FROM books where isbn = ?) as count", (isbn, ))
+
+    if cursor.fetchone()[0] == 1:
+        result = True
+    else:
+        result = False
+
+    close_sqlite_connection(connection)
+    return result
+
+def get_details_using_isbn(isbn):
+    if (does_isbn_exist(isbn)):
+        connection, cursor = connect_to_sqlite_db(path_to_db)
+        cursor.execute("SELECT isbn, name, author, image_path FROM books where isbn = ?", (isbn, ))
+        return cursor.fetchone()
+
+    else:
+        return ("Invalid", "Does Not Exist", "Invalid", 'default-image.jpeg')

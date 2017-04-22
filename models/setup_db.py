@@ -28,7 +28,7 @@ def setup():
     # autoincrement uses extra cpu but doing it nevertheless given the scale
     create_users = (
         'CREATE TABLE users ('
-        'id INTEGER PRIMARY KEY,'
+        'id INTEGER PRIMARY KEY,' # this autoincrements by itself
         'username CHARACTER(15) NOT NULL,'
         'password_hash TEXT NOT NULL,'
         'full_name VARCHAR(50) NOT NULL'
