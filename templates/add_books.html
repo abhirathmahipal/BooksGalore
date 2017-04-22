@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+    {% block maincontent %}
+<div class="container">
+    <form class="form-group" action="" method="POST" enctype="multipart/form-data">
+        <h2 class="form-group-heading">Add Book</h2>
+        <label for="book-name">Book Title</label>
+        <input id="book-name" name="book-title" class="form-control" placeholder="Book's Name" required autofocus>
+        <label for="author-field" >Author</label>
+        <input id="author-field" name="author" class="form-control" placeholder="Author's Name" required>
+        <label for="isbn-field" >ISBN</label> <!-- check for dashed -->
+        <input id="isbn-field" name="isbn" class="form-control" placeholder="ISBN" required>
+        <label for="file-upload">Upload Image</label>
+        <input type="file" name="book-image" accept="image/x-png,image/jpeg">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Book</button>
+    </form>
+</div>
+    {% endblock %}
+

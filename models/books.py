@@ -1,0 +1,90 @@
+from werkzeug import secure_filename
+import os
+from utils import generate_search_friendly_name, generate_partial_uuid, connect_to_sqlite_db, close_sqlite_connection
+from config import path_to_db
+import re
+import imghdr
+
+class Book:
+    'Class to make sense of books'
+    # add getters and setter and sanity checks here if time permits
+    def __init__(self, name, author, isbn, image_path, search_name):
+        self.name = name
+        self.author = author
+        self.isbn = isbn
+        self.image_path = image_path
+        self.search_name = search_name
+
+
+def insert_new_book_to_motherlode(book_ob):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    cursor.execute(
+        "INSERT INTO books (isbn, name, search_name, author, image_path) VALUES(?, ?, ?, ?, ?)",
+        (book_ob.isbn, book_ob.name, book_ob.search_name, book_ob.author, book_ob.image_path))
+    close_sqlite_connection(connection)
+
+def is_book_invalid(book_title):
+    validate = re.compile(r'[^0-9a-zA-Z \']').search
+
+    if (len(book_title) > 100):
+        return True
+
+    if (len(book_title.replace(' ', '').replace('\t', '')) < 1):
+        return True
+
+    if (validate(book_title)):
+        return True
+
+    return False
+
+
+def is_author_invalid(author):
+    #only allowing a-z, . ' and spaces
+    validate = re.compile(r'[^a-zA-Z\.\' ]').search
+    if (len(author) > 50):
+        return True
+
+    # if it contains less than one non space character
+    if (len(author.replace(" ", '').replace('\t', '')) < 1):
+        return True
+
+    if (validate(author)):
+        return True
+
+    return False
+
+
+def is_isbn_invalid(isbn):
+    #only allow numbers and hypens
+    validate = re.compile(r'[^0-9-]').search
+
+    if (validate(isbn)):
+        return True
+
+    if (len(isbn.replace("-", "")) != 13):
+        return True
+
+    return False
+
+
+def is_cover_invalid(cover_file, uploaded_filename):
+    file_name, file_extension = os.path.splitext(uploaded_filename)
+    
+    # extension checking
+    if file_extension not in (".png", ".jpg", ".jpeg"):
+        return True
+        
+    # Checking if the file actually is an image and not just any renamed file
+    if imghdr.what(cover_file) not in (".png", ".jpg", ".jpeg"):
+        return True
+
+    return False
+
+
+def create_image_path_for_db(uploaded_filename):
+    file_name, file_extension = os.path.splitext(uploaded_filename)
+    secure_base_name = secure_filename(file_name)
+    if len(secure_base_name) <= 40:
+       return secure_base_name + generate_partial_uuid(5) + file_extension
+    else:
+       return secure_base_name[:40] + generate_partial_uuid(5) + file_extension

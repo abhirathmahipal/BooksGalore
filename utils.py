@@ -1,5 +1,5 @@
-import sqlite3
 import uuid
+import sqlite3
 
 
 def connect_to_sqlite_db(file_path):
@@ -16,3 +16,6 @@ def close_sqlite_connection(connection):
 def generate_partial_uuid(length):
     return str(uuid.uuid4())[:length]
 
+
+def generate_search_friendly_name(messy_string):
+    return messy_string

@@ -1,11 +1,11 @@
 import sqlite3
 import os
-from config import relative_path_to_db
+from config import path_to_db 
 from utils import connect_to_sqlite_db, close_sqlite_connection
 
 
 def setup():
-    connection, cursor = connect_to_sqlite_db(relative_path_to_db)
+    connection, cursor = connect_to_sqlite_db(path_to_db)
 
     # Setup books table
     # To make it easy to search similar books via ISBN, it's 
@@ -16,9 +16,9 @@ def setup():
         'CREATE TABLE books ('
         'isbn CHARACTER(13) PRIMARY KEY,'
         'name VARCHAR(100) NOT NULL,'
+        'search_name VARCHAR(100) NOT NULL,'
         'author VARCHAR(50) NOT NULL,'
-        'genre CHARACTER(20) NOT NULL,'
-        'image_file CHARACTER(50)'
+        'image_path CHARACTER(50)'
         ');'
     )
     cursor.execute(create_books)
@@ -37,6 +37,14 @@ def setup():
     cursor.execute(create_users)
 
     # Setup user favourite book tables
+    create_favourite_books = (
+        'CREATE TABLE favourite ('
+        'user_id INTEGER NOT NULL,'
+        'isbn CHARACTER(13) NOT NULL,'
+        'FOREIGN KEY(isbn) REFERENCES artist(artistid)'
+        ');'
+    )
+    cursor.execute(create_favourite_books)
 
     # Setup book vote tables
     # -1 for downvote, +1 for upvote
@@ -50,5 +58,3 @@ def setup():
     cursor.execute(create_votes)
 
     close_sqlite_connection(connection)
-
-
