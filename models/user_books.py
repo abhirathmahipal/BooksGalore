@@ -1,7 +1,7 @@
 import sqlite3
 from utils import connect_to_sqlite_db, close_sqlite_connection
-from config import path_to_db
-from models.books import does_isbn_exist
+from config import path_to_db, books_per_page
+from models.books import does_isbn_exist, get_details_using_isbn
 from models.users import does_user_id_exist
 
 
@@ -42,3 +42,26 @@ def total_fav_books(id):
 
 def delete_user_book(id, isbn):
     return True
+
+def handle_pagination(user_id, page, total_books):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    result = {'prev': False, 'next': False, 'books': []}
+    if total_books:
+        if total_books > (page * books_per_page):
+            result['next'] = True
+        if page > 1:
+            result['prev'] = True
+        
+        # Getting the relevant stuff from DB
+        cursor.execute("SELECT isbn FROM favourite WHERE user_id = ? LIMIT ? OFFSET ?",
+                        (user_id, books_per_page, (page - 1) * books_per_page))
+        
+        for individual_isbn in cursor.fetchall():
+            isbn, title, author, image = get_details_using_isbn(individual_isbn[0])
+            result['books'].append({'isbn': isbn,
+                                    'title': title,
+                                    'author': author,
+                                    'image': image})
+
+    close_sqlite_connection(connection)
+    return result

@@ -11,7 +11,7 @@ from models.books import (Book, create_image_path_for_db,
 from models.users import (validate_and_get_details, User, create_new_user, 
                           is_full_name_invalid, is_username_invalid, 
                           username_already_exists, is_password_weak, get_full_name_from_id)
-from models.user_books import insert_new_user_book, delete_user_book, total_fav_books
+from models.user_books import insert_new_user_book, delete_user_book, total_fav_books, handle_pagination
 from utils import generate_partial_uuid, generate_search_friendly_name
 from werkzeug import secure_filename
 
@@ -188,9 +188,12 @@ def paginate_book_list(page):
     # have to rerender everytime as the items can change when
     # books are removed or inserted. It still does not take 
     # concurrency into account.
-    id = current_user.get_id()
-    if id:
-        return (str(total_fav_books(id)))
+
+    # Take care of 0 and negative ints? Does Flask acknowledge negative ints?
+    user_id = current_user.get_id()
+    if user_id:
+        total_books = total_fav_books(user_id)
+        return jsonify(handle_pagination(user_id, page, total_books))
     else:
         return ("Please <a href='/sign_in'>login</a> if you want to continue.")
 

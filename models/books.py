@@ -1,7 +1,7 @@
 from werkzeug import secure_filename
 import os
 from utils import generate_search_friendly_name, generate_partial_uuid, connect_to_sqlite_db, close_sqlite_connection
-from config import path_to_db
+from config import path_to_db, books_per_page
 import re
 import imghdr
 
