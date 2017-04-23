@@ -1,2 +1,4 @@
 env/
 *.pyc
+/static/book_covers/*
+booksgalore.db

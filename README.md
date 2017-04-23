@@ -9,6 +9,8 @@ Screening task for an internship.
 - Install requirements ```pip install -r requirements.txt```
 - If on Linux ```./start.sh```
 - If on Windows open ```start.bat``` to start the server
+- Extensively tested on Windows
+- Inadequate testing on Linux
 
 
 ## Some Bugs and Smells
@@ -32,6 +34,7 @@ Screening task for an internship.
 - Remove occurances of duplicate code if left accidentally.
 - **Code can be refactored in a lot of places.**
 - Try and catch statements.
+- The actual algorithms via which an ISBN can be checked (like how creditcard number are validated using certain rules).
 
 ## Reasoning Behind Decisions
 - Chose Flask as Flask (with multithreads enabled) + gunicorn + nginx is decent for a sqlite databse. Also I'm more familiar with Flask than Django.
@@ -63,7 +66,7 @@ Webpages that I found myself frequently going to.
 ### Author
 - Client side and server side.  
 ### Image 
-- Client side and server side checks. Random strings are added at the end of an image file to avoid name collisions. Also a default image is used in case nothing is provided. The image is named after the title of the book  for SEO benefits. 
+- Client side and server side checks. Random strings are added at the end of an image file to avoid name collisions. Also a default image is used in case nothing is provided. 
 
 ## ```/sign_up```
 - Password strength and username uniquess is verified before creating a new account.
@@ -74,3 +77,7 @@ Webpages that I found myself frequently going to.
 - Users can see the list of his favourite books.
 - When the user adds a favourite book, it checks the database if the book actually exists, if the user exists and doesn't insert if it's already in his fav list.
 - Search for book via typeahead and add.
+- User can delete a book from favourites.
+
+##```/book/<isbn>```
+- Qucik stats about the book in question.
