@@ -1,6 +1,15 @@
 # BooksGalore
 Screening task for an internship.
 
+## Instructions
+- You need to have Python2
+- cd into the source directory
+- Create a virtual environment named 'env' using  
+```virtualenv -p "path/to/python2```  
+- Install requirements ```pip install -r requirements.txt```
+- If on Linux ```./start.sh```
+- If on Windows open ```start.bat``` to start the server
+
 
 ## Some Bugs and Smells
 - User deleted from the DB for some reason but if the client still remembers the session associated with that user. The server isn't able to respond in this case.
