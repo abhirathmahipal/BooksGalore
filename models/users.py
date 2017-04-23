@@ -62,9 +62,22 @@ def is_username_invalid(username):
 
     return False
 
+def does_user_id_exist(id):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    result = None
+    cursor.execute("SELECT (SELECT count() FROM users WHERE id = ?) as count", (id, ))
+    if cursor.fetchone()[0] > 0:
+        result = True
+    else:
+        result = False
+
+    close_sqlite_connection(connection)
+    return result
+    
+
 def username_already_exists(username):
     connection, cursor = connect_to_sqlite_db(path_to_db)
-    cursor.execute("SELECT (SELECT count() FROM users where username = ?) as count", (username,))
+    cursor.execute("SELECT (SELECT count() FROM users WHERE username = ?) as count", (username,))
     if cursor.fetchone()[0] > 0:
         close_sqlite_connection(connection)
         return True
@@ -72,6 +85,12 @@ def username_already_exists(username):
     close_sqlite_connection(connection)
     return False
 
+def get_full_name_from_id(id):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    cursor.execute("SELECT full_name FROM users WHERE id = ?", (id, ))
+    name = cursor.fetchone()[0]
+    close_sqlite_connection(connection)
+    return name
 
 def is_password_weak(password):
     numeric = re.compile(r'[0-9]').search

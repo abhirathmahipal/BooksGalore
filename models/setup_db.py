@@ -41,7 +41,7 @@ def setup():
         'CREATE TABLE favourite ('
         'user_id INTEGER NOT NULL,'
         'isbn CHARACTER(13) NOT NULL,'
-        'FOREIGN KEY(isbn) REFERENCES artist(artistid)'
+        'FOREIGN KEY(isbn) REFERENCES books(isbn)'
         ');'
     )
     cursor.execute(create_favourite_books)

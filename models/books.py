@@ -4,7 +4,7 @@ from utils import generate_search_friendly_name, generate_partial_uuid, connect_
 from config import path_to_db
 import re
 import imghdr
-import copy
+
 
 class Book:
     'Class to make sense of books'
@@ -12,7 +12,7 @@ class Book:
     def __init__(self, name, author, isbn, image_path, search_name):
         self.name = name
         self.author = author
-        self.isbn = isbn
+        self.isbn = isbn.replace("-", '')
         self.image_path = image_path
         self.search_name = search_name
 
@@ -91,7 +91,7 @@ def create_image_path_for_db(uploaded_filename):
 
 def does_isbn_exist(isbn):
     connection, cursor = connect_to_sqlite_db(path_to_db)
-    cursor.execute("SELECT (SELECT count() FROM books where isbn = ?) as count", (isbn, ))
+    cursor.execute("SELECT (SELECT count() FROM books where isbn = ?) as count", (isbn.replace("-", ''),))
 
     if cursor.fetchone()[0] == 1:
         result = True
@@ -106,6 +106,14 @@ def get_details_using_isbn(isbn):
         connection, cursor = connect_to_sqlite_db(path_to_db)
         cursor.execute("SELECT isbn, name, author, image_path FROM books where isbn = ?", (isbn, ))
         return cursor.fetchone()
-
     else:
         return ("Invalid", "Does Not Exist", "Invalid", 'default-image.jpeg')
+
+def match_books_by_string(name_string):
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    search_param = '%' + generate_search_friendly_name(name_string) + '%'
+    cursor.execute("SELECT isbn, name, author, image_path FROM books WHERE search_name like ?", (search_param, ))
+    results = cursor.fetchall()
+    json_results = [{'isbn': i[0], 'title': i[1], 'author': i[2], 'image': i[3]} for i in results]
+    close_sqlite_connection(connection)
+    return json_results

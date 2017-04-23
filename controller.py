@@ -1,16 +1,17 @@
 import os
 import uuid
 import config
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect
+from flask import Flask, render_template, request, send_from_directory, url_for, redirect, jsonify
 from flask.ext.login import (LoginManager, UserMixin, login_required,
-                             login_user, logout_user)
+                             login_user, logout_user, current_user)
 from models.books import (Book, create_image_path_for_db,
                           insert_new_book_to_motherlode, is_author_invalid,
                           is_book_invalid, is_cover_invalid, is_isbn_invalid,
-                          get_details_using_isbn, does_isbn_exist)
+                          get_details_using_isbn, does_isbn_exist, match_books_by_string)
 from models.users import (validate_and_get_details, User, create_new_user, 
                           is_full_name_invalid, is_username_invalid, 
-                          username_already_exists, is_password_weak)
+                          username_already_exists, is_password_weak, get_full_name_from_id)
+from models.user_books import insert_new_user_book, delete_user_book, total_fav_books
 from utils import generate_partial_uuid, generate_search_friendly_name
 from werkzeug import secure_filename
 
@@ -20,9 +21,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 @app.route('/', methods=['GET'])
-def render_index():
-    return("Hi", 200)
-
+def render_sign_in():
+    if current_user.get_id():
+        return redirect("/manage")
+    else:
+        return redirect("/sign_in")
 
 @app.route('/motherlode/add', methods=['GET'])
 def render_add_book_form():
@@ -40,14 +43,14 @@ def add_book():
     
     isbn = request.form['isbn']
     if 'isbn' not in request.form or is_isbn_invalid(isbn) or does_isbn_exist(isbn):
-        return "Please mention the book's ISBN"
+        return "Please mention the book's ISBN. No duplicates please."
 
     # Book cover
     if 'book-image' not in request.files or request.files['book-image'].filename == '':
         image_path_in_db = 'default-image.jpeg'
 
     elif is_cover_invalid(request.files['book-image'].filename):
-        return "Improper image. Please follow conventions"
+        return "Improper image. Pleasefollow conventions"
 
     else:
         image_path_in_db = create_image_path_for_db(request.files['book-image'].filename)
@@ -57,7 +60,7 @@ def add_book():
         
     book_to_save = Book(request.form['book-title'],
                         request.form['author'],
-                        isbn,
+                        isbn.replace("-", ''),
                         image_path_in_db,
                         generate_search_friendly_name(request.form['book-title']))
 
@@ -69,10 +72,17 @@ class User_Auth(UserMixin):
 
     def __init__(self, id):
         self.id = id
+        self.name = get_full_name_from_id(self.id)
 
 
     def __repr__(self):
         return "%d" % (self.id)
+
+    def get_name(self):
+        if self.get_id():
+            return self.name
+        else:
+            return None
 
 
 @login_manager.user_loader
@@ -82,10 +92,13 @@ def load_user(user_id):
 
 @app.route('/sign_in', methods=['GET'])
 def render_sign_in_form():
-    return render_template('sign_in.html', title="Sign In")
+    if current_user.get_id():
+        return ('You are already logged in. Go <a href="/manage">manage</a> your books or <a href="/sign_out">logout</a>.')
+    else:
+        return render_template('sign_in.html', title="Sign In")
 
 @app.route('/sign_in', methods=['POST'])
-def sign_in():
+def sign_in(): 
     if 'username' in request.form and 'password' in request.form:
         # if validation fails return does not exist or something similar
         valid_sign_in, user_id, full_name = validate_and_get_details(request.form['username'], request.form['password'])
@@ -93,17 +106,19 @@ def sign_in():
         if valid_sign_in:
             user = User_Auth(user_id)
             login_user(user)
-            return "Logged In"
+            return redirect("/manage")
         else:
             return "The given user does not exist or you've entered an incorrect combination"
     else:
         return ("Please input an username and a password")
 
+
 @app.route('/sign_out', methods=['GET'])
 @login_required
 def sign_out():
+    full_name = current_user.get_name()
     logout_user()
-    return "logged_out"
+    return (full_name + " has successfully logged out.")
 
 
 @app.route('/sign_up', methods=['GET'])
@@ -140,8 +155,42 @@ def book_details(isbn):
                             isbn=isbn, name=name, author=author,
                             image_path=image_path)
 
+@app.route('/search/book/<name_string>')
+def search_book_by_name(name_string):
+    return jsonify(match_books_by_string(name_string))
+
 
 @app.route('/manage', methods=['GET'])
-@login_required
 def render_user_list():
-    return render_template("user_manage_books.html", title="Manage")
+    if current_user.get_id():
+        return render_template("user_manage_books.html", title="Manage", full_name=current_user.get_name())
+    else:
+        return ("Please <a href='/sign_in'>login</a> if you want to continue.")
+
+
+@app.route('/manage/add', methods=['POST'])
+def add_favourite_book():
+    id = current_user.get_id()
+    if id:
+        if is_isbn_invalid(request.form['isbn']):
+            return ("Please enter a valid ISBN")
+        if insert_new_user_book(id, request.form['isbn']):
+            return ("Book successfully added")
+        else:
+            return ("Book could not be added due to various reasons")
+    else:
+        return ("Please <a href='/sign_in'>login</a> if you want to continue.")
+
+
+@app.route('/manage/page', defaults={'page': 1})
+@app.route('/manage/page/<int:page>')
+def paginate_book_list(page):
+    # have to rerender everytime as the items can change when
+    # books are removed or inserted. It still does not take 
+    # concurrency into account.
+    id = current_user.get_id()
+    if id:
+        return (str(total_fav_books(id)))
+    else:
+        return ("Please <a href='/sign_in'>login</a> if you want to continue.")
+

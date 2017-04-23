@@ -18,4 +18,4 @@ def generate_partial_uuid(length):
 
 
 def generate_search_friendly_name(messy_string):
-    return "".join(i for i in messy_string if i.isalnum()) 
+    return "".join(i.upper() for i in messy_string if i.isalnum()) 
