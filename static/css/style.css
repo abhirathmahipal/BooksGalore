@@ -32,23 +32,20 @@ h1, h2, h3, h4, h5, h6, p, a, label, input {
 
 /*Manage Page*/
 .book-card-holder {
-    text-align: center;
-    margin:0 auto;
+    height: 600px;
 }
 
-.book-card h3 {
+.book-card h4 {
     font-size: 16px;
+    letter-spacing: 1px;
 }
 
 .book-card p {
     font-size: 12px;
 }
 .book-card {
-    border: 1px solid;
-    border-radius: 20px;
-    height: 200px;
-    text-align: center;
-    margin: 5px;
+    height: 320px;
+    padding: 10px 0;
 }
 
 .nav > li > a {
@@ -56,9 +53,38 @@ h1, h2, h3, h4, h5, h6, p, a, label, input {
 }
 
 .book-card img {
-    height: 90px;
-    width: 60px;
+    height: auto;
+    width: auto;
+    max-width: 160px;
+    max-height: 240px;
     margin: 5px auto 5px auto;
+}
+
+.img-wrapper {
+    position: relative;
+}
+
+.delete-book {
+    opacity: 0.9;
+    background-color:#CA6769;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.navigate-page-button {
+    margin: 0 10px;
+    width: 50px;
+}
+
+.navigate-page-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.navigate-page-row {
+    text-align: center;
+    margin: 30px 0;
 }
 
 /*Individual books page*/

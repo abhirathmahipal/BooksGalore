@@ -41,7 +41,18 @@ def total_fav_books(id):
     return count
 
 def delete_user_book(id, isbn):
-    return True
+    connection, cursor = connect_to_sqlite_db(path_to_db)
+    
+    # is_user_book_unique checks if there are copies of the same id and isbn
+    # bad naming convention. Fix late
+    if does_isbn_exist(isbn) and does_user_id_exist(id) and not is_user_book_unique(id, isbn):
+        cursor.execute("DELETE FROM favourite WHERE user_id = ? AND isbn = ?", (id, isbn))
+        result = True
+    else:
+        result = False
+    
+    close_sqlite_connection(connection)
+    return result
 
 def handle_pagination(user_id, page, total_books):
     connection, cursor = connect_to_sqlite_db(path_to_db)

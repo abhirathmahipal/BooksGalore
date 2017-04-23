@@ -13,25 +13,35 @@
         vm.page = null;
         vm.next_page = next_page;
         vm.previous_page = previous_page;
+        vm.delete_book = delete_book;
 
-        function load_data(page) {
-            vm.page = favourite_service.get_page_data(page)
+        function load_page(page) {
+            favourite_service.get_page_data(page)
                 .then(function(response) {
                     vm.page = response.data;
                 });
         }
 
         function init() {
-            load_data(1); // loading page 1
+            load_page(1); // loading page 1
         }
 
         function next_page() {
-            load_data(vm.page.current + 1);
+            load_page(vm.page.current + 1);
         }
 
         function previous_page() {
-            load_data(vm.page.current - 1);
+            load_page(vm.page.current - 1);
         }
+
+        function delete_book(isbn) {
+            favourite_service.delete_book(isbn)
+                .then(function(response) {
+                    if (response.status == 200)
+                        load_page(vm.page.current);
+                });             
+        }
+
         init();
     }
 })();

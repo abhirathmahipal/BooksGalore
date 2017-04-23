@@ -5,12 +5,17 @@ Screening task for an internship.
 - You need to have Python2
 - cd into the source directory
 - Create a virtual environment named 'env' using  
-```virtualenv -p "path/to/python2```  
+```virtualenv -p "path/to/python2" env```  
 - Install requirements ```pip install -r requirements.txt```
 - If on Linux ```./start.sh```
 - If on Windows open ```start.bat``` to start the server
 - Extensively tested on Windows
 - Inadequate testing on Linux
+- This repository contains a sample database so that it's ready to use. If you don't want to use it delete ```booksgalore.db```
+- Filler login credentials  
+```abhirath``` - ```BJ123!```  
+```rohan``` - ```BJ123!```
+- ISBN's and usernames must be unique. Passwords should be atleast 6 characters long, must contain at least one numeric digis, one uppercase alphabet and one character from -> [!@#$^*.]
 
 
 ## Some Bugs and Smells
@@ -20,6 +25,7 @@ Screening task for an internship.
 - Nasty frontend. Not organised at all. Eg: Angular directives and services could have been used for book cards instead of data binding.
 - Routes (controller) isn't separated into different files.
 - Concurrency issues (say the number of pages is 5. A little after that some new fav books are added. The client still think there are 5 pages till the next page is loaded). I haven't taken care of this issue.
+- Frontend haven't accounted design for long book and author names.
 
 
 ## Good to Have
@@ -36,6 +42,7 @@ Screening task for an internship.
 - Try and catch statements.
 - The actual algorithms via which an ISBN can be checked (like how creditcard number are validated using certain rules).
 
+
 ## Reasoning Behind Decisions
 - Chose Flask as Flask (with multithreads enabled) + gunicorn + nginx is decent for a sqlite databse. Also I'm more familiar with Flask than Django.
 - I chose not to use an ORM and instead chose to write queries by hand as I felt it isn't that big a project.
@@ -49,11 +56,12 @@ Webpages that I found myself frequently going to.
 - http://getbootstrap.com/getting-started/#examples
 - https://github.com/shekhargulati/flask-login-example/blob/master/flask-login-example.py
 - Read about Angular and Flask interpolation since they use the same symbol
-- GoodReads.com for image sizing help
+- GoodReads.com for book cover width to height ratio
 - https://docs.python.org/2/library/sqlite3.html
 - https://twitter.github.io/typeahead.js/examples/
 - StackOverflow
 - My old Angular project
+- sqlite Python documentation and examples from tutorialspoint
 
 
 ## ```/motherlode/add```
@@ -79,5 +87,5 @@ Webpages that I found myself frequently going to.
 - Search for book via typeahead and add.
 - User can delete a book from favourites.
 
-##```/book/<isbn>```
+## ```/book/<isbn>```
 - Qucik stats about the book in question.

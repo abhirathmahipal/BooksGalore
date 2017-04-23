@@ -27,26 +27,31 @@
         <div class="row">
             <div class="form-group">
                 <input name="isbn" placeholder="Enter Book Name" id="typeahead-add-book" class="form-control input-lg" type="text">
+                 <button class="btn btn-basic" type="submit">Add</button>
             </div>
         </div>
-    <button type="submit">Add</button>
     </form>
     
     <div ng-controller="favourite_controller as vm">
         <div class="book-card-holder row">
             <h4>Hi {{full_name}}. Here are your existing favourites</h4>
             <div ng-repeat="individual_book in vm.page.books" class="book-card col-sm-6 col-xs-12 col-md-3 col-lg-4">
-                <h4>{[ individual_book.title ]}</h4>
-                <img ng-src="{[ '/static/book_covers/' + individual_book.image ]}" />
-                <h4>{[ individual_book.author]}</h4>
+                <div class="img-wrapper">
+                    <img ng-src="{[ '/static/book_covers/' + individual_book.image ]}" />
+                    <button ng-click="vm.delete_book(individual_book.isbn)" class="btn btn-danger btn-small delete-book"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+                <div class="text-left">
+                    <h4>{[ individual_book.title ]}</h4>
+                </div>
                 
             </div>
 
         </div>
-        <div class="row">
-            <button ng-show="vm.page.prev" ng-click="vm.previous_page()">Prev</button>
+        <!-- or could have just given class=container -->
+        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 navigate-page-row"> 
+            <button class="btn btn-basic btn-small navigate-page-button" ng-disabled="!vm.page.prev" ng-click="vm.previous_page()"><span class="glyphicon glyphicon-menu-left"></button>
             <span>{[ vm.page.current]}</span>
-            <button ng-show="vm.page.next" ng-click="vm.next_page()">Next</button>
+            <button class="btn btn-basic btn-small navigate-page-button" ng-disabled="!vm.page.next" ng-click="vm.next_page()"><span class="glyphicon glyphicon-menu-right"></button>
         </div>
     </div>
 

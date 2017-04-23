@@ -186,10 +186,10 @@ def add_favourite_book():
 @app.route('/manage/page/<int:page>', methods=['POST'])
 def paginate_book_list(page):
     # have to rerender everytime as the items can change when
-    # books are removed or inserted. It still does not take 
+    # books are removed or inserted. It still does not take extreme
     # concurrency into account.
-
-    # Take care of 0 and negative ints? Does Flask acknowledge negative ints?
+    if page < 1:
+        page = 1 # taking care of 0 and -ve
     user_id = current_user.get_id()
     if user_id:
         total_books = total_fav_books(user_id)
@@ -197,3 +197,13 @@ def paginate_book_list(page):
     else:
         return ("Please <a href='/sign_in'>login</a> if you want to continue.")
 
+@app.route('/manage/delete/<isbn>', methods=['DELETE'])
+def remove_book(isbn):
+    user_id = current_user.get_id()
+    if user_id:
+        if delete_user_book(user_id, isbn):
+            return ("The book has been removed from your favourite list")
+        else:
+            return ("Could not delete book for some reason")
+    else:
+        return ("Please login to delete the book")
