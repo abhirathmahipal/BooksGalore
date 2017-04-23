@@ -45,10 +45,10 @@ def delete_user_book(id, isbn):
 
 def handle_pagination(user_id, page, total_books):
     connection, cursor = connect_to_sqlite_db(path_to_db)
-    result = {'prev': False, 'next': False, 'books': []}
+    result = {'prev': None, 'next': None, 'books': [], "current": page}
     if total_books:
         if total_books > (page * books_per_page):
-            result['next'] = True
+            result['next'] = True 
         if page > 1:
             result['prev'] = True
         

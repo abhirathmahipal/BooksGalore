@@ -51,6 +51,10 @@ h1, h2, h3, h4, h5, h6, p, a, label, input {
     margin: 5px;
 }
 
+.nav > li > a {
+    padding: 15px 50px;
+}
+
 .book-card img {
     height: 90px;
     width: 60px;
@@ -75,6 +79,11 @@ h1, h2, h3, h4, h5, h6, p, a, label, input {
 
 #individual-book-data p {
     margin-left: 30px;
+}
+
+.individual-book-heading {
+    font-weight: 900;
+    font-size: 16px;
 }
 
 @media only screen and (min-width: 768px) {

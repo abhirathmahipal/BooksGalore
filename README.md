@@ -6,9 +6,9 @@ Screening task for an internship.
 - User deleted from the DB for some reason but if the client still remembers the session associated with that user. The server isn't able to respond in this case.
 - Should have taken out common functionality of preprocessing of input. chances of missing preprocessing somewhere due to this. For example ISBN when queried or inserted should always be stripped of all the hyphens. Bugs might arise as the stripping is done manually everywhere.
 - Made a Book and User class. Didn't make proper use of it. Some queries use objects and other queries use strings or ints.
-- Nasty frontend. Not organised at all. Angular directives and services could have been used for book cards, form validation conditions and sending requests.
+- Nasty frontend. Not organised at all. Eg: Angular directives and services could have been used for book cards instead of data binding.
 - Routes (controller) isn't separated into different files.
-- Concurrency issues (say the number of pages is 5. A little after that some new fav books are added. The client still think there are 5 pages). I haven't taken care of this issue.
+- Concurrency issues (say the number of pages is 5. A little after that some new fav books are added. The client still think there are 5 pages till the next page is loaded). I haven't taken care of this issue.
 
 
 ## Good to Have
@@ -29,10 +29,11 @@ Screening task for an internship.
 - I chose not to use an ORM and instead chose to write queries by hand as I felt it isn't that big a project.
 - Why no proper commit messages? I forgot to commit in the start.
 - Used a library called Flask-Login as manually setting and retrieving cookies would have been painful.
+- Why an old version of Angular? I've used Angular 1.5 in the past and I felt it would save me some time.
 
 ## References
 Webpages that I found myself frequently going to.
-- Python and Flask's documentations.
+- Python and Flask's documentations
 - http://getbootstrap.com/getting-started/#examples
 - https://github.com/shekhargulati/flask-login-example/blob/master/flask-login-example.py
 - Read about Angular and Flask interpolation since they use the same symbol
@@ -40,6 +41,7 @@ Webpages that I found myself frequently going to.
 - https://docs.python.org/2/library/sqlite3.html
 - https://twitter.github.io/typeahead.js/examples/
 - StackOverflow
+- My old Angular project
 
 
 ## ```/motherlode/add```

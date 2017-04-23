@@ -22,7 +22,7 @@
 
     <!--Book Search and Add Bar-->
     <div class="container">
-    <h3>Search and Add a New Book</h3>
+    <h4>Search and Add a New Book</h4>
     <form role="form" action="/manage/add" method="POST">
         <div class="row">
             <div class="form-group">
@@ -32,40 +32,29 @@
     <button type="submit">Add</button>
     </form>
     
+    <div ng-controller="favourite_controller as vm">
+        <div class="book-card-holder row">
+            <h4>Hi {{full_name}}. Here are your existing favourites</h4>
+            <div ng-repeat="individual_book in vm.page.books" class="book-card col-sm-6 col-xs-12 col-md-3 col-lg-4">
+                <h4>{[ individual_book.title ]}</h4>
+                <img ng-src="{[ '/static/book_covers/' + individual_book.image ]}" />
+                <h4>{[ individual_book.author]}</h4>
+                
+            </div>
 
-    <div class="book-card-holder">
-        <h3>Hi {{full_name}}. Here are your existing favourites</h3>
-        <div class="book-card col-sm-6 col-xs-12 col-md-3 col-lg-4">
-            <h3>Book Name</h3>
-            <img src="/static/book_covers/default_cover.jpg" />
-            <p>A short description works well and at times <a>Read More...</a></p>
-        </div> 
+        </div>
+        <div class="row">
+            <button ng-show="vm.page.prev" ng-click="vm.previous_page()">Prev</button>
+            <span>{[ vm.page.current]}</span>
+            <button ng-show="vm.page.next" ng-click="vm.next_page()">Next</button>
+        </div>
     </div>
 
     </div>   
      
 
-<script>
+<script src="/static/js/manage_fav/typeahead.js"></script>
+<script src="/static/js/manage_fav/favourite_service.js"></script>
+<script src="/static/js/manage_fav/favourite_controller.js"></script>
 
-var book_results = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: {
-    url: '/search/book/%QUERY',
-    wildcard: '%QUERY'
-    }
-});
-
-$('#typeahead-add-book').typeahead(null, {
-    name: 'searchbook',
-    displayKey: 'isbn',
-    source: book_results,
-    templates: {
-        suggestion: function (searchbook) {
-            return '<div>' + searchbook.title + '</div>';
-        }
-    }
-});
-
-</script>
     {% endblock %}

@@ -182,8 +182,8 @@ def add_favourite_book():
         return ("Please <a href='/sign_in'>login</a> if you want to continue.")
 
 
-@app.route('/manage/page', defaults={'page': 1})
-@app.route('/manage/page/<int:page>')
+# GET requests are cached by the browser. So choosing POST
+@app.route('/manage/page/<int:page>', methods=['POST'])
 def paginate_book_list(page):
     # have to rerender everytime as the items can change when
     # books are removed or inserted. It still does not take 

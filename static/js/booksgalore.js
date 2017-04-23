@@ -1,4 +1,4 @@
-var app = angular.module("booksgalore");
+var app = angular.module("booksgalore", ['ngRoute']);
 
 // Since Jinja2 and Angular use the syntax to identify their expressions
 // it is advisable to interpolate Angular to recognise {[ instead of {{

@@ -2,4 +2,4 @@ import os
 
 
 path_to_db = "booksgalore.db"
-books_per_page = 5
+books_per_page = 6
