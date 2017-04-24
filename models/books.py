@@ -102,6 +102,7 @@ def does_isbn_exist(isbn):
     return result
 
 def get_details_using_isbn(isbn):
+    isbn = isbn.replace('-', '')
     if (does_isbn_exist(isbn)):
         connection, cursor = connect_to_sqlite_db(path_to_db)
         cursor.execute("SELECT isbn, name, author, image_path FROM books where isbn = ?", (isbn, ))

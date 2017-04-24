@@ -22,10 +22,12 @@ Screening task for an internship.
 - User deleted from the DB for some reason but if the client still remembers the session associated with that user. The server isn't able to respond in this case.
 - Should have taken out common functionality of preprocessing of input. chances of missing preprocessing somewhere due to this. For example ISBN when queried or inserted should always be stripped of all the hyphens. Bugs might arise as the stripping is done manually everywhere.
 - Made a Book and User class. Didn't make proper use of it. Some queries use objects and other queries use strings or ints.
-- Nasty frontend. Not organised at all. Eg: Angular directives and services could have been used for book cards instead of data binding.
+- Nasty frontend. Not organised at all (Frontend code is quite decent as of this comment. Angular is used for almost everything). 
 - Routes (controller) isn't separated into different files.
 - Concurrency issues (say the number of pages is 5. A little after that some new fav books are added. The client still think there are 5 pages till the next page is loaded). I haven't taken care of this issue.
-- Frontend haven't accounted design for long book and author names.
+- Frontend isn't accounted design for long book and author names. Also it's not very mobile friendly.
+- ***Frontend sanity checks are quite strong but not absolute. Backend sanity checks are ABSOLUTE***
+
 
 
 ## Good to Have
@@ -48,7 +50,8 @@ Screening task for an internship.
 - I chose not to use an ORM and instead chose to write queries by hand as I felt it isn't that big a project.
 - Why no proper commit messages? I forgot to commit in the start.
 - Used a library called Flask-Login as manually setting and retrieving cookies would have been painful.
-- Why an old version of Angular? I've used Angular 1.5 in the past and I felt it would save me some time.
+- I've never seen a sign_in form's username and password being validated on the frontend, so I've not validated the sign_in form's input in the frontend.
+- ***I couldn't think or find a neat angular way to compare password and confirm passwords fields. I didn't want to mix Vanilla JavaScript or jQuery to pollute the primarily Angular validation.***
 
 ## References
 Webpages that I found myself frequently going to.
@@ -80,6 +83,7 @@ Webpages that I found myself frequently going to.
 - Password strength and username uniquess is verified before creating a new account.
 - username can only contain alphanumeric characters. Max length of 15.
 - Only hashed passwords are stored. The same hashing technique is used to compare passwords when a user tried to login.
+- Both frontend and serverside sanity checks.
 
 ## ```/manage```
 - Users can see the list of his favourite books.

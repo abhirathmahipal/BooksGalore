@@ -1,18 +1,36 @@
 {% extends "base.html" %}
     {% block maincontent %}
 <div class="container"> 
-    <form class="form-signup" action="" method="POST">
+    <form name="sign_up_form" class="form-signup" action="" method="POST" novalidate>
         <h3 class="form-signup-heading">Create an Account</h2>
-        <label class="sr-only">Full Name</label>
-        <input type="text" name="full-name" id="input-fullname" class="form-control" placeholder="Full Name" required />
-        <label class="sr-only">Username</label>
-        <input name="username" type="text" id="input-username" class="form-control" placeholder="Username" required autofocus>
-        <label class="sr-only">Password</label>
-        <input name="password" type="password" id="input-password" class="form-control" placeholder="Password" required>
-        <label class="sr-only">Retype Password</label>
-        <input name="repassword" type="password" id="input-repassword" class="form-control" placeholder="Retype Password" required>
         
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+        <label class="sr-only">Full Name</label>
+        <input ng-model="full_name" ng-maxlength="50" type="text" 
+               name="full_name" id="input-fullname" class="form-control" 
+               ng-pattern="/^[a-zA-Z0-9\. ]*$/"
+               placeholder="Full Name" required />
+        <p ng-show="sign_up_form.full_name.$error.required && !sign_up_form.full_name.$pristine" class="help-block">Full name required.</p>
+        <p ng-show="sign_up_form.full_name.$error.maxlength" class="help-block">Full name is too long. Max 50 characters.</p>
+        <p ng-show="sign_up_form.full_name.$error.pattern" class="help-block">Alphabets . and spaces are only allowed</p>
+
+        <label class="sr-only">Username</label>
+        <input ng-pattern="/^[a-z0-9]*$/" ng-model="username" ng-maxlength="15" name="username" type="text" 
+               id="input-username" class="form-control" placeholder="Username" required autofocus>
+        <p ng-show="sign_up_form.username.$error.required && !sign_up_form.username.$pristine" class="help-block">Username required.</p>
+        <p ng-show="sign_up_form.username.$error.maxlength" class="help-block">Username is too long. Max 15 characters.</p>
+        <p ng-show="sign_up_form.username.$error.pattern" class="help-block">Can only contain lowercase alphabets and number</p>
+
+        <label class="sr-only">Password</label>
+        <input ng-pattern="/(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$\^\*\.])/" ng-minlength="6" ng-maxlength="20" ng-model="password" 
+               name="password" type="password" id="input-password" class="form-control" placeholder="Password" required>
+        <p ng-show="(sign_up_form.password.$error.maxlength || sign_up_form.password.$error.minlength || sign_up_form.password.$error.required) && !sign_up_form.password.$pristine" 
+            class="help-block">Password between 6 and 20 character please.</p>
+        <p ng-show="sign_up_form.password.$error.pattern" class="help-block">Password must contain a numeric digit, an upper case alphabet and one among [!@#$^*.]</p>
+
+        <label class="sr-only">Retype Password</label>
+        <input ng-model="repassword" name="repassword" type="password" id="input-repassword" class="form-control" placeholder="Retype Password" required>
+        <p ng-show="sign_up_form.repassword.$error.required && !sign_up_form.repassword.$pristine" class="help-block">Please type in your password again.</p>
+        <button ng-disabled="sign_up_form.$invalid" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
     </form>
 </div>
     {% endblock %}

@@ -54,7 +54,7 @@ def is_full_name_invalid(full_name):
 
 def is_username_invalid(username):
     validate = re.compile(r'[^a-z0-9]').search
-    if (len(username) > 15):
+    if len(username) > 15 or len(username) < 1:
         return True
     
     if (validate(username)):
@@ -97,7 +97,8 @@ def is_password_weak(password):
     special = re.compile(r'[!@#\$\^\*\.]').search
     upper_case = re.compile(r'[A-Z]').search
 
-    if len(password) < 6:
+    length = len(password)
+    if length < 6 or length > 20:
         return True
 
     if not numeric(password):

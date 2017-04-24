@@ -1,14 +1,21 @@
 {% extends "base.html" %}
     {% block maincontent %}
-<div class="container">
-    <form class="form-signin" action="" method="POST">
+<div class="container" >
+    <form name="sign_in_form" class="form-signin" action="" method="POST" novalidate>
         <h3 class="form-signin-heading">Existing Account</h3>
+
         <label class="sr-only">Username</label>
-        <input name="username" type="text" id="input-username" class="form-control" placeholder="Username" required autofocus>
+        <input ng-maxlength="15"  ng-model="username" name="username" type="text" id="input-username" class="form-control" placeholder="Username" required autofocus>
+        <p ng-show="sign_in_form.username.$error.required && !sign_in_form.username.$pristine" class="help-block">Username required.</p>
+        <p ng-show="sign_in_form.username.$error.maxlength" class="help-block">Username is too long.</p>
+
         <label class="sr-only">Password</label>
-        <input name="password" type="password" id="input-password" class="form-control" placeholder="Password" required>
+        <input ng-model="password" name="password" type="password" id="input-password" class="form-control" placeholder="Password" required>
+        <p ng-show="sign_in_form.password.$error.required && !sign_in_form.password.$pristine" class="help-block">Please enter your password.</p>
+
+        
         <label>Don't have an account?<a href="/sign_up">Sign Up</a></label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <button ng-disabled="sign_in_form.$invalid" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
     </form>
 </div>
     {% endblock %}

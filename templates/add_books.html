@@ -1,17 +1,33 @@
 {% extends "base.html" %}
     {% block maincontent %}
 <div class="container">
-    <form class="form-group" id="form-add-book" action="" method="POST" enctype="multipart/form-data">
+    <form name="add_book_form" class="form-group" id="form-add-book" action="" method="POST" enctype="multipart/form-data" novalidate>
         <h2 class="form-group-heading">Add Book</h2>
+        
         <label for="book-name">Book Title</label>
-        <input id="book-name" name="book-title" class="form-control" placeholder="Book's Name" required autofocus>
+        <input ng-maxlength="100" ng-pattern="/^[a-zA-Z0-9' ]*$/" ng-model="book_title" id="book-name" name="book_title" class="form-control" placeholder="Book's Name" required autofocus>
+        <p ng-show="add_book_form.book_title.$error.required && !add_book_form.book_title.$pristine" class="help-block">Title required.</p>
+        <p ng-show="add_book_form.book_title.$error.maxlength" class="help-block">Too long. Max 100 characters.</p>
+        <p ng-show="add_book_form.book_title.$error.pattern" class="help-block">Alphabets digits ' and spaces allowed</p>
+
         <label for="author-field" >Author</label>
-        <input id="author-field" name="author" class="form-control" placeholder="Author's Name" required>
-        <label for="isbn-field" >ISBN</label> <!-- check for dashed -->
-        <input id="isbn-field" name="isbn" class="form-control" placeholder="ISBN" required>
+        <input ng-pattern="/^[a-zA-Z0-9\. ]*$/" ng-maxlength="50" ng-model="author" id="author-field" name="author" class="form-control" placeholder="Author's Name" required>
+        <p ng-show="add_book_form.author.$error.required && !add_book_form.author.$pristine" class="help-block">Author required.</p>
+        <p ng-show="add_book_form.author.$error.maxlength" class="help-block">Too long. Max 50 characters.</p>
+        <p ng-show="add_book_form.author.$error.pattern" class="help-block">Alphabets . and spaces are only allowed</p>
+
+        <label for="isbn-field" >ISBN</label>
+        <input ng-minlength="13" ng-maxlength="17" ng-pattern="/^[0-9-]*$/" ng-model="isbn" id="isbn-field" name="isbn" class="form-control" placeholder="ISBN" required>
+        <p ng-show="add_book_form.isbn.$error.required && !add_book_form.isbn.$pristine" class="help-block">ISBN required</p>
+        <p ng-show="add_book_form.isbn.$error.maxlength || add_book_form.isbn.$error.minlength" class="help-block">ISBN's with "-" included go from 13 to 16 characters</p>
+        <p ng-show="add_book_form.isbn.$error.pattern" class="help-block">Only digits and - allowed</p>
+
+
         <label for="file-upload">Upload Image</label>
         <input type="file" name="book-image" accept="image/x-png,image/jpeg">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Book</button>
+
+
+        <button ng-disabled="add_book_form.$invalid" class="btn btn-lg btn-primary btn-block" type="submit">Add Book</button>
     </form>
 </div>
     {% endblock %}

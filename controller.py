@@ -35,7 +35,7 @@ def render_add_book_form():
 @app.route('/motherlode/add', methods=['POST'])
 def add_book():
 
-    if 'book-title' not in request.form or is_book_invalid(request.form['book-title']):
+    if 'book_title' not in request.form or is_book_invalid(request.form['book_title']):
         return "Book should have a name"
 
     if 'author' not in request.form or is_author_invalid(request.form['author']):
@@ -58,11 +58,11 @@ def add_book():
         # save file to FS
         book_cover_file.save(os.path.join('static', 'book_covers', image_path_in_db))
         
-    book_to_save = Book(request.form['book-title'],
+    book_to_save = Book(request.form['book_title'],
                         request.form['author'],
                         isbn.replace("-", ''),
                         image_path_in_db,
-                        generate_search_friendly_name(request.form['book-title']))
+                        generate_search_friendly_name(request.form['book_title']))
 
     insert_new_book_to_motherlode(book_to_save)
 
@@ -129,11 +129,11 @@ def render_sign_up_form():
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
 
-    if 'full-name' not in request.form or is_full_name_invalid(request.form['full-name']):
+    if 'full_name' not in request.form or is_full_name_invalid(request.form['full_name']):
         return "Please enter full name"
     
     if 'username' not in request.form or is_username_invalid(request.form['username']) or username_already_exists(request.form['username']):
-        return "Please enter your desired username"
+        return "Please enter your desired username or it's already taken"
 
     if 'password' not in request.form or is_password_weak(request.form['password']):
         return "Please enter a strong password"
@@ -141,7 +141,7 @@ def sign_up():
     if 'repassword' not in request.form or request.form['password'] != request.form['repassword']:
         return "Please verify your password as well"
 
-    user_to_create = User(request.form['full-name'],
+    user_to_create = User(request.form['full_name'],
                           request.form['username'],
                           request.form['password'])
 
@@ -150,7 +150,7 @@ def sign_up():
 
 @app.route('/book/<isbn>')
 def book_details(isbn):
-    isbn, name, author, image_path = get_details_using_isbn(isbn)
+    isbn, name, author, image_path = get_details_using_isbn(isbn.replace('-', ''))
     return render_template("individual_book.html", title=name,
                             isbn=isbn, name=name, author=author,
                             image_path=image_path)
