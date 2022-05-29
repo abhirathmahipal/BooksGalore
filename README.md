@@ -18,6 +18,17 @@ Screening task for an internship.
 - ISBN's and usernames must be unique. Passwords should be atleast 6 characters long, must contain at least one numeric digis, one uppercase alphabet and one character from -> [!@#$^*.]
 
 
+## Demo
+- Sign Up
+![sign_up](./demo/sign_up.gif)
+- Add Book to Motherlode
+![add_book](./demo/add_book_to_motherlode.gif)
+- Pagination
+![pagination](./demo/pagination.gif)
+- Add New Favourite
+![add_new_favourite](./demo/add_new_favourite.gif)
+
+
 ## Some Bugs and Smells
 - User deleted from the DB for some reason but if the client still remembers the session associated with that user. The server isn't able to respond in this case.
 - Should have taken out common functionality of preprocessing of input. chances of missing preprocessing somewhere due to this. For example ISBN when queried or inserted should always be stripped of all the hyphens. Bugs might arise as the stripping is done manually everywhere.
